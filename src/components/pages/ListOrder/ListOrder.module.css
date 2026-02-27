@@ -1,0 +1,32 @@
+.order{
+  padding: 1rem;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wrapper_button{
+  display: flex;
+  gap: 1rem;
+}
+
+.table{
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.table thead{
+  background-color: #f0f0f0;
+}
+
+.table th, .table td{
+  text-align: left;
+}
+
+.action{
+  display: flex;
+  gap: 0.5rem;
+}

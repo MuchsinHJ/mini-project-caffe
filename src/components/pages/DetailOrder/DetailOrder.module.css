@@ -1,0 +1,58 @@
+.detail {
+  max-height: 100vh;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.containerDetail {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: skyblue;
+  border-radius: 10px;
+}
+
+.wrapperCustomer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.wrapperMenu {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.cardCustomer {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.containerCardMenu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cardMenu {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.imageMenu {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 0 auto;
+}
