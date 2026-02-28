@@ -10,11 +10,11 @@ interface IMenuItem {
 }
 
 interface ICart {
-  id?: string
   menuId?: string;
   quantity: number;
-  notes: string;
+  notes?: string;
   menuItem?: IMenuItem;
+  name?: string;
 }
 
 interface IOrder {

@@ -1,18 +1,25 @@
-import styles from './Button.module.css'
+import styles from "./Button.module.css";
 
-interface ButtonProps{
+interface ButtonProps {
   children: string;
-  type?: 'submit' | 'button' | 'reset'; 
+  type?: "submit" | "button" | "reset";
   onClick?: () => void;
   className?: string;
-  color?: 'primary' | 'secondary';
+  color?: "primary" | "secondary";
 }
 
 const Button = (props: ButtonProps) => {
-  const {children, type, className, color= 'primary'} = props;
+  const { children, type, className, color = "primary", onClick } = props;
   return (
-    <button className={`${styles.button} ${styles[`button-${color}`]} ${className}`} type={type || 'button'} {...props}>{children}</button>
-  )
-}
+    <button
+      className={`${styles.button} ${styles[`button-${color}`]} ${className}`}
+      type={type || "button"}
+      onClick={onClick}
+      {...props}
+    >
+      {children}{" "}
+    </button>
+  );
+};
 
-export default Button
+export default Button;
