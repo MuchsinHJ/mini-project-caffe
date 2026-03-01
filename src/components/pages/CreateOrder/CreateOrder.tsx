@@ -8,19 +8,25 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Select from "../../ui/Select/Select";
 import { createOrder } from "../../../services/order.service";
+import type { IMeta } from "../../../types/meta";
 
 const CreateOrder = () => {
   const [menus, setMenus] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [carts, setCarts] = useState<ICart[]>([]);
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState<IMeta>();
+  const category = searchParams.get("category") as string;
+  const pages = Array.from({ length: meta?.totalPages ?? 0 }, (_, i) => i + 1);
 
   useEffect(() => {
     const fetchMenus = async () => {
-      const result = await getMenu(searchParams.get("category") as string);
+      const result = await getMenu(category, page);
       setMenus(result.data);
+      setMeta(result.metadata);
     };
     fetchMenus();
-  }, [searchParams.get("category")]);
+  }, [category, page]);
 
   const handleAddToCart = (type: string, menuId: string, name: string) => {
     const itemIsInCart = carts.find((cart: ICart) => cart.menuId === menuId);
@@ -67,7 +73,6 @@ const CreateOrder = () => {
     };
     await createOrder(payload);
     return navigate("/orders");
-
   };
 
   return (
@@ -120,6 +125,18 @@ const CreateOrder = () => {
                   </Button>
                 </div>
               </div>
+            ))}
+          </div>
+          <div className={styles.pagination}>
+            {pages.map((pageNumber) => (
+              <Button
+                key={pageNumber}
+                color={pageNumber === page ? "primary" : "secondary"}
+                onClick={() => setPage(pageNumber)}
+                disabled={pageNumber === page}
+              >
+                {`${pageNumber}`}
+              </Button>
             ))}
           </div>
         </div>
