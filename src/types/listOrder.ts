@@ -7,6 +7,7 @@ interface IMenuItem {
   category: string;
   is_available?: boolean;
   created_at?: string;
+  onAddToCart?: (type: string, id: string, name: string) => void;
 }
 
 interface ICart {

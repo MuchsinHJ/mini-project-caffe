@@ -1,0 +1,25 @@
+.menuCard {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  padding: 1rem;
+  
+  .menuImage {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .bottom {
+    margin-top: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .price {
+      font-size: 24px;
+    }
+  }
+}

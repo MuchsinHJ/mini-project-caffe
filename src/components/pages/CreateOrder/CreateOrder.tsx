@@ -1,4 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
+// import Skeleton from 'react-loading-skeleton'
+import "react-loading-skeleton/dist/skeleton.css";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import type { ICart, IMenuItem } from "../../../types/listOrder";
 import { getMenu } from "../../../services/menu.service";
@@ -9,53 +11,30 @@ import Input from "../../ui/Input";
 import Select from "../../ui/Select/Select";
 import { createOrder } from "../../../services/order.service";
 import type { IMeta } from "../../../types/meta";
+import { useCart } from "../../../hooks/useCart";
+import MenuCard from "../../ui/MenuCard";
+import CardSkeleton from "../../ui/CardSkeleton";
 
 const CreateOrder = () => {
   const [menus, setMenus] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [carts, setCarts] = useState<ICart[]>([]);
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState<IMeta>();
   const category = searchParams.get("category") as string;
+  const [isLoading, setIsLoading] = useState(true);
+  const { carts, handleAddToCart } = useCart();
   const pages = Array.from({ length: meta?.totalPages ?? 0 }, (_, i) => i + 1);
 
   useEffect(() => {
     const fetchMenus = async () => {
+      setIsLoading(true);
       const result = await getMenu(category, page);
       setMenus(result.data);
       setMeta(result.metadata);
+      setIsLoading(false);
     };
     fetchMenus();
   }, [category, page]);
-
-  const handleAddToCart = (type: string, menuId: string, name: string) => {
-    const itemIsInCart = carts.find((cart: ICart) => cart.menuId === menuId);
-    if (type === "increment") {
-      if (itemIsInCart) {
-        setCarts(
-          carts.map((item: ICart) =>
-            item.menuId === menuId
-              ? { ...item, quantity: item.quantity + 1 }
-              : item,
-          ),
-        );
-      } else {
-        setCarts([...carts, { menuId, quantity: 1, notes: "", name }]);
-      }
-    } else {
-      if (itemIsInCart && itemIsInCart.quantity <= 1) {
-        setCarts(carts.filter((item: ICart) => item.menuId !== menuId));
-      } else {
-        setCarts(
-          carts.map((item: ICart) =>
-            item.menuId === menuId
-              ? { ...item, quantity: item.quantity - 1 }
-              : item,
-          ),
-        );
-      }
-    }
-  };
 
   const navigate = useNavigate();
 
@@ -99,46 +78,33 @@ const CreateOrder = () => {
             ))}
           </nav>
           <div className={styles.containerMenu}>
-            {menus.map((item: IMenuItem) => (
-              <div className={styles.cardMenu} key={item.id}>
-                <img
-                  src={item.image_url}
-                  alt={item.name}
-                  className={styles.menuImage}
+            {isLoading ? (
+              <CardSkeleton cards={6} />
+            ) : (
+              menus.map((item: IMenuItem) => (
+                <MenuCard
+                  key={item.id}
+                  {...item}
+                  onAddToCart={handleAddToCart}
                 />
-                <h3>{item.name}</h3>
-                <p>{item.description}</p>
-                <div className={styles.bottom}>
-                  <p className={styles.price}>${item.price}</p>
-                  <Button
-                    type="button"
-                    color="primary"
-                    onClick={() =>
-                      handleAddToCart(
-                        "increment",
-                        item.id as string,
-                        item.name as string,
-                      )
-                    }
-                  >
-                    Add to Cart
-                  </Button>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
-          <div className={styles.pagination}>
-            {pages.map((pageNumber) => (
-              <Button
-                key={pageNumber}
-                color={pageNumber === page ? "primary" : "secondary"}
-                onClick={() => setPage(pageNumber)}
-                disabled={pageNumber === page}
-              >
-                {`${pageNumber}`}
-              </Button>
-            ))}
-          </div>
+
+          {!isLoading && (
+            <div className={styles.pagination}>
+              {pages.map((pageNumber) => (
+                <Button
+                  key={pageNumber}
+                  color={pageNumber === page ? "primary" : "secondary"}
+                  onClick={() => setPage(pageNumber)}
+                  disabled={pageNumber === page}
+                >
+                  {`${pageNumber}`}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         <aside className={styles.createOrderAside}>
           <form className={styles.cartForm} onSubmit={handleOrder}>
