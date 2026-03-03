@@ -4,10 +4,10 @@ import Input from "../../ui/Input";
 import type { SubmitEventHandler } from "react";
 import { login } from "../../../services/auth.service";
 import { setLocalStorage } from "../../../utils/storage";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const handleLogin: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
@@ -16,9 +16,10 @@ const Login = () => {
       password: form.password.value,
     };
     const result = await login(payload);
-    setLocalStorage('auth', result.token);
+    setLocalStorage("auth", result.token);
+    setLocalStorage("auth-expired", Date.now() + 60 * 60 * 1000); // 5 minutes in milliseconds
 
-    return navigate('/orders', {replace: true})
+    return navigate("/orders", { replace: true });
   };
 
   return (

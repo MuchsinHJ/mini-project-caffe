@@ -29,6 +29,7 @@ const CreateOrder = () => {
     const fetchMenus = async () => {
       setIsLoading(true);
       const result = await getMenu(category, page);
+      console.log(result);  
       setMenus(result.data);
       setMeta(result.metadata);
       setIsLoading(false);
@@ -91,20 +92,18 @@ const CreateOrder = () => {
             )}
           </div>
 
-          {!isLoading && (
-            <div className={styles.pagination}>
-              {pages.map((pageNumber) => (
-                <Button
-                  key={pageNumber}
-                  color={pageNumber === page ? "primary" : "secondary"}
-                  onClick={() => setPage(pageNumber)}
-                  disabled={pageNumber === page}
-                >
-                  {`${pageNumber}`}
-                </Button>
-              ))}
-            </div>
-          )}
+          <div className={styles.pagination}>
+            {pages.map((pageNumber) => (
+              <Button
+                key={pageNumber}
+                color={pageNumber === page ? "primary" : "secondary"}
+                onClick={() => setPage(pageNumber)}
+                disabled={pageNumber === page}
+              >
+                {`${pageNumber}`}
+              </Button>
+            ))}
+          </div>
         </div>
         <aside className={styles.createOrderAside}>
           <form className={styles.cartForm} onSubmit={handleOrder}>

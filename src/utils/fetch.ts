@@ -5,7 +5,11 @@ export const fetchAPI = async (url: string, options: RequestInit) => {
     },
     ...options,
   })
-
+  
+  // if(!response.ok){
+  //   const error = await response.json();
+  // }
+  
   const result = await response.json();
   return result;
 }

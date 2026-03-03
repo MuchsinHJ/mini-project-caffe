@@ -16,7 +16,6 @@ const DetailOrder = () => {
     fetchOrder();
   }, []);
 
-  console.log(order);
   return (
     <main>
       <section className={styles.detail}>

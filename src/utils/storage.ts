@@ -19,4 +19,10 @@ const setLocalStorage = (key: string, value: unknown) => storage?.setItem(key, J
 
 const removeLocalStorage = (key: string) => storage?.removeItem(key);
 
-export {getLocalStorage, setLocalStorage, removeLocalStorage};
+const isAuthExpired = (key: string):boolean => {
+  const expiredAt = getLocalStorage(key);
+  if(!expiredAt) return true;
+  return Date.now() > Number(expiredAt);
+}
+
+export {getLocalStorage, setLocalStorage, removeLocalStorage, isAuthExpired};
