@@ -20,22 +20,23 @@ const CreateOrder = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState<IMeta>();
-  const category = searchParams.get("category") as string;
   const [isLoading, setIsLoading] = useState(true);
   const { carts, handleAddToCart } = useCart();
   const pages = Array.from({ length: meta?.totalPages ?? 0 }, (_, i) => i + 1);
+  //params
+  const category = searchParams.get("category") as string;
+  const search = (searchParams.get("search") as string) || "";
 
   useEffect(() => {
     const fetchMenus = async () => {
       setIsLoading(true);
-      const result = await getMenu(category, page);
-      console.log(result);  
+      const result = await getMenu(category, search, page);
       setMenus(result.data);
       setMeta(result.metadata);
       setIsLoading(false);
     };
     fetchMenus();
-  }, [category, page]);
+  }, [category, search, page]);
 
   const navigate = useNavigate();
 
@@ -59,28 +60,57 @@ const CreateOrder = () => {
     <main>
       <section className={styles.createOrder}>
         <div className={styles.menuList}>
-          <nav className={styles.filterCategory}>
-            {filters.map((filter) => (
-              <Button
-                type="button"
-                color={
-                  (!searchParams.get("category") && filter === "All") ||
-                  searchParams.get("category") === filter
-                    ? "primary"
-                    : "secondary"
-                }
-                key={filter}
-                onClick={() =>
-                  setSearchParams(filter === "All" ? {} : { category: filter })
-                }
-              >
-                {filter}
-              </Button>
-            ))}
+          <nav className={styles.filterMenu}>
+            <div className={styles.searchMenu}>
+              <Input
+                id="search"
+                name="search"
+                placeholder="Search by name"
+                defaultValue={search}
+                onChange={(e) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  if (e.target.value) {
+                    params.set("search", e.target.value);
+                  } else {
+                    params.delete("search");
+                  }
+                  setSearchParams(params);
+                  setPage(1);
+                }}
+              />
+            </div>
+            <div className={styles.filterCategory}>
+              {filters.map((filter) => (
+                <Button
+                  type="button"
+                  color={
+                    (!searchParams.get("category") && filter === "All") ||
+                    searchParams.get("category") === filter
+                      ? "primary"
+                      : "secondary"
+                  }
+                  key={filter}
+                  onClick={() => {
+                    const params = new URLSearchParams(searchParams.toString());
+                    if (filter === "All") {
+                      params.delete("category");
+                    } else {
+                      params.set("category", filter);
+                    }
+                    setSearchParams(params);
+                    setPage(1);
+                  }}
+                >
+                  {filter}
+                </Button>
+              ))}
+            </div>
           </nav>
           <div className={styles.containerMenu}>
             {isLoading ? (
               <CardSkeleton cards={6} />
+            ) : menus.length === 0 ? (
+              <p className={styles.emptyMessage}>No menu found</p>
             ) : (
               menus.map((item: IMenuItem) => (
                 <MenuCard
@@ -92,18 +122,20 @@ const CreateOrder = () => {
             )}
           </div>
 
-          <div className={styles.pagination}>
-            {pages.map((pageNumber) => (
-              <Button
-                key={pageNumber}
-                color={pageNumber === page ? "primary" : "secondary"}
-                onClick={() => setPage(pageNumber)}
-                disabled={pageNumber === page}
-              >
-                {`${pageNumber}`}
-              </Button>
-            ))}
-          </div>
+          {menus.length > 0 && (
+            <div className={styles.pagination}>
+              {pages.map((pageNumber) => (
+                <Button
+                  key={pageNumber}
+                  color={pageNumber === page ? "primary" : "secondary"}
+                  onClick={() => setPage(pageNumber)}
+                  disabled={pageNumber === page}
+                >
+                  {`${pageNumber}`}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         <aside className={styles.createOrderAside}>
           <form className={styles.cartForm} onSubmit={handleOrder}>

@@ -21,10 +21,22 @@
   }
 }
 
-.filterCategory {
+.filterMenu {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+
+  .searchMenu {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .filterCategory{
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
 }
 
 .containerMenu {

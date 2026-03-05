@@ -6,8 +6,10 @@ interface InputProps {
   id: string;
   type?: string;
   placeholder?: string;
+  defaultValue?: string;
   required?: boolean;
   className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = (props: InputProps) => {
@@ -19,6 +21,8 @@ const Input = (props: InputProps) => {
     placeholder,
     required = false,
     className,
+    defaultValue,
+    onChange,
   } = props;
   return (
     <label htmlFor={id} className={styles.label}>
@@ -30,6 +34,8 @@ const Input = (props: InputProps) => {
         name={name}
         placeholder={placeholder}
         required={required}
+        defaultValue={defaultValue}
+        onChange={onChange}
       />
     </label>
   );
